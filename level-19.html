@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#edf1f5">
+  <title>19｜海大餐廳排隊系統</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #172636;
+      --muted: #71869a;
+      --paper: #edf1f5;
+      --panel: #fff;
+      --line: #d6e0e9;
+      --soft: #dfe7ef;
+      --navy: #172430;
+      --teal: #087565;
+      --orange: #bc581c;
+      --orange-soft: #f5e2d2;
+      --shadow: 0 9px 22px rgba(32, 53, 74, .08);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: "Noto Sans TC", sans-serif; font-size: 13px; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1190px, calc(100% - 42px)); margin: 0 auto; }
+    .course-route { display: flex; align-items: center; gap: 8px; padding: 11px 0 0; color: var(--muted); font-size: 10px; }
+    .course-route a { color: inherit; text-decoration: none; }
+    .course-route a:hover { color: var(--teal); }
+    .lesson { padding: 20px 0 26px; border-bottom: 1px solid var(--line); }
+    .lesson-heading { display: flex; align-items: start; gap: 14px; margin-bottom: 18px; }
+    .lesson-number { display: grid; width: 34px; height: 30px; place-items: center; flex: 0 0 auto; border-radius: 6px; color: var(--orange); background: var(--orange-soft); font: 500 12px "DM Mono", monospace; }
+    h1 { margin: 0; font-size: 24px; line-height: 1.3; letter-spacing: 0; }
+    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+    .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .lesson-card { min-width: 0; padding: 17px 19px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); }
+    .lesson-card h2 { margin: 0 0 9px; font-size: 15px; }
+    .lesson-card p { margin: 7px 0; color: #5e7590; font-size: 11px; line-height: 1.85; }
+    .instruction-list, .concept-list { margin: 0; padding: 0; list-style: none; }
+    .instruction-list li { display: grid; grid-template-columns: 21px 73px 1fr; gap: 9px; align-items: start; margin: 7px 0; color: #526a83; font-size: 11px; line-height: 1.7; }
+    .instruction-list b { color: var(--ink); }
+    .step-no { display: grid; width: 19px; height: 19px; place-items: center; border-radius: 5px; color: #314961; background: #e5ebf1; font: 500 10px "DM Mono", monospace; }
+    .concept-list li { position: relative; margin: 7px 0; padding-left: 16px; color: #526a83; font-size: 11px; line-height: 1.75; }
+    .concept-list li::before { position: absolute; left: 0; top: 0; color: var(--orange); content: "●"; font-size: 9px; }
+    .concept-list strong { color: var(--ink); }
+    .challenge { display: grid; grid-template-columns: 50px 1fr; gap: 12px; align-items: center; margin-top: 12px; padding: 11px 13px; border-left: 3px solid var(--orange); border-radius: 0 7px 7px 0; background: var(--orange-soft); color: #715c4d; font-size: 10px; line-height: 1.8; }
+    .challenge-icon { display: grid; width: 44px; height: 52px; place-items: center; border-radius: 5px; color: white; background: var(--orange); font-size: 10px; font-weight: 800; }
+    .complexity { display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: center; margin-top: 11px; padding: 10px 12px; border-left: 3px solid var(--teal); border-radius: 0 7px 7px 0; background: #d9ece7; color: #526f75; font-size: 10px; line-height: 1.75; }
+    .complexity-badge { display: grid; min-height: 57px; place-items: center; border-radius: 5px; color: white; background: var(--teal); font: 500 10px "DM Mono", monospace; }
+
+    .work-section { padding: 19px 0 31px; }
+    .work-heading { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin-bottom: 16px; }
+    .work-title { display: flex; align-items: start; gap: 13px; }
+    .work-title h2 { margin: 0; font-size: 22px; line-height: 1.35; }
+    .work-title p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .source-link { padding: 8px 11px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: white; font-size: 10px; text-decoration: none; white-space: nowrap; }
+    .source-link:hover { border-color: #9caec0; background: #f8fafc; }
+    .registration { display: grid; grid-template-columns: 30px 1fr 1fr auto auto; gap: 9px; align-items: center; padding: 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); box-shadow: var(--shadow); }
+    .bar-label, .toolbar-label { color: var(--muted); font: 500 9px "DM Mono", monospace; }
+    .text-field { min-width: 0; height: 37px; padding: 0 11px; border: 1px solid #cad6e1; border-radius: 5px; outline: none; color: var(--ink); background: var(--soft); font-size: 11px; }
+    .text-field:focus { border-color: #708ba3; background: white; box-shadow: 0 0 0 3px rgba(92,125,154,.12); }
+    .text-field::placeholder { color: #8399ad; }
+    .button { min-height: 37px; padding: 0 13px; border: 0; border-radius: 5px; color: var(--ink); background: var(--soft); font-size: 10px; font-weight: 700; transition: transform .15s, filter .15s; }
+    .button:hover { filter: brightness(.97); transform: translateY(-1px); }
+    .button:active { transform: translateY(0); }
+    .button-primary { color: white; background: var(--navy); }
+    .button-primary:hover { background: #25384a; }
+    .button-orange { color: white; background: var(--orange); }
+    .toolbar { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); box-shadow: var(--shadow); }
+    .toolbar-label { margin-right: 3px; }
+    .toolbar .button { min-height: 34px; padding: 0 12px; }
+    .toolbar .button-close { margin-left: auto; }
+    .rank-input { width: 92px; height: 34px; }
+    .system-layout { display: grid; grid-template-columns: minmax(0, 1fr) 252px; gap: 14px; align-items: start; margin-top: 15px; }
+    .main-board, .side-card { min-width: 0; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); box-shadow: var(--shadow); }
+    .main-board { padding: 13px; }
+    .board-caption { display: flex; justify-content: space-between; gap: 12px; margin: 1px 1px 10px; color: var(--muted); font: 500 9px "DM Mono", monospace; }
+    .display-board { display: grid; grid-template-columns: 1.15fr .72fr .58fr; overflow: hidden; border-radius: 8px; color: white; background: var(--navy); }
+    .display-cell { min-width: 0; min-height: 96px; padding: 12px 14px; border-right: 1px solid rgba(219,230,239,.55); }
+    .display-cell:last-child { border-right: 0; }
+    .display-label { color: #9caab6; font: 500 9px "DM Mono", monospace; letter-spacing: 0; }
+    .display-value { overflow: hidden; margin-top: 8px; color: #f8e5d5; font: 500 27px "DM Mono", monospace; text-overflow: ellipsis; white-space: nowrap; }
+    .display-value small { color: #dce5ed; font: 600 10px "Noto Sans TC", sans-serif; }
+    .display-name { overflow: hidden; margin-top: 4px; color: #d8e4ee; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .queue-lane { display: grid; grid-template-columns: 74px minmax(0, 1fr) 74px; gap: 9px; align-items: stretch; margin-top: 10px; }
+    .lane-end { display: grid; min-height: 108px; align-content: center; justify-items: center; gap: 4px; border: 1px dashed #2f9c8b; border-radius: 7px; color: var(--teal); background: #eef6f4; text-align: center; }
+    .lane-end.back { border-color: #dd895a; color: var(--orange); background: #fbf3ed; }
+    .lane-end strong { font-size: 11px; }
+    .lane-end span { font-size: 9px; }
+    .queue-nodes { display: flex; min-width: 0; min-height: 108px; align-items: center; gap: 8px; overflow-x: auto; padding: 12px; border-radius: 7px; background: var(--soft); scrollbar-width: thin; }
+    .queue-empty { width: 100%; color: #8298ac; text-align: center; font-size: 10px; }
+    .customer-node { position: relative; flex: 0 0 135px; padding: 10px 10px 9px; border: 1px solid #c8d4df; border-radius: 6px; background: #fff; animation: arrive .2s ease-out; }
+    .customer-node.front-node { border-color: #78b4a8; box-shadow: inset 0 3px var(--teal); }
+    .customer-node.back-node { border-color: #e0a17c; box-shadow: inset 0 3px var(--orange); }
+    .node-label { display: flex; justify-content: space-between; color: var(--muted); font: 500 8px "DM Mono", monospace; }
+    .node-number { margin-top: 7px; color: var(--ink); font: 500 17px "DM Mono", monospace; }
+    .node-name { overflow: hidden; margin-top: 2px; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .node-phone { margin-top: 4px; color: var(--muted); font: 400 9px "DM Mono", monospace; }
+    .queue-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 10px 0 15px; color: #627990; font-size: 10px; }
+    .legend-chip { padding: 1px 6px; border-radius: 3px; color: white; background: var(--teal); font: 500 8px "DM Mono", monospace; }
+    .legend-chip.back { background: var(--orange); }
+    .output-title { margin: 0 0 8px; color: var(--muted); font: 500 9px "DM Mono", monospace; }
+    .output-log { min-height: 125px; max-height: 210px; overflow: auto; padding: 11px 12px; border-radius: 7px; color: #627990; background: var(--soft); font: 400 10px/1.8 "DM Mono", "Noto Sans TC", monospace; white-space: pre-wrap; }
+    .output-log p { margin: 0; }
+    .output-log .success { color: var(--teal); }
+    .output-log .warning { color: var(--orange); }
+    .start-message { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; margin-top: 11px; padding: 11px 12px; border-left: 3px solid #c8d4df; border-radius: 0 6px 6px 0; background: var(--soft); }
+    .start-label { padding: 4px 7px; border-radius: 4px; color: var(--navy); background: #cbd5df; font: 500 9px "DM Mono", monospace; }
+    .start-message strong { display: block; margin-bottom: 4px; font-size: 11px; }
+    .start-message p { margin: 0; color: #627990; font-size: 10px; line-height: 1.7; }
+    .sidebar { display: grid; gap: 13px; }
+    .side-card { padding: 13px; }
+    .side-heading { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; color: var(--muted); font: 500 9px "DM Mono", monospace; }
+    .side-heading span:last-child { font-family: "Noto Sans TC", sans-serif; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-box { min-width: 0; min-height: 55px; padding: 9px; border-radius: 6px; background: var(--soft); }
+    .stat-box.wide { grid-column: 1 / -1; }
+    .stat-label { color: var(--muted); font: 500 8px "DM Mono", monospace; }
+    .stat-value { overflow: hidden; margin-top: 3px; color: var(--ink); font: 500 18px "DM Mono", monospace; text-overflow: ellipsis; white-space: nowrap; }
+    .stat-value.front { color: var(--teal); }
+    .stat-value.back { color: var(--orange); }
+    .fifo-copy { color: #7790a5; font-size: 10px; line-height: 1.65; }
+    .fifo-copy strong { display: block; margin: 7px 0 4px; color: var(--ink); font-size: 11px; }
+    .footer { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; }
+    .footer a { color: inherit; text-decoration: none; }
+    .footer a:hover { color: var(--teal); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+    @keyframes arrive { from { opacity: 0; transform: translateX(7px); } to { opacity: 1; transform: translateX(0); } }
+    @media (max-width: 850px) {
+      .system-layout { grid-template-columns: minmax(0, 1fr) 220px; gap: 10px; }
+      .toolbar { flex-wrap: wrap; }
+      .toolbar .button-close { margin-left: 0; }
+      .registration { grid-template-columns: 28px 1fr 1fr auto; }
+      .registration .button-demo { grid-column: 4; grid-row: 1 / 3; height: 100%; }
+      .registration .button-register { grid-column: 2 / 4; }
+    }
+    @media (max-width: 650px) {
+      .shell { width: calc(100% - 26px); }
+      .lesson { padding-top: 16px; }
+      .lesson-grid { grid-template-columns: 1fr; gap: 10px; }
+      .lesson-card { padding: 14px; }
+      .work-heading { align-items: start; }
+      .work-title h2 { font-size: 19px; }
+      .registration { grid-template-columns: 1fr 1fr; }
+      .bar-label { grid-column: 1 / -1; }
+      .registration .text-field { grid-column: 1 / -1; }
+      .registration .button-register, .registration .button-demo { grid-column: auto; grid-row: auto; height: auto; }
+      .toolbar { gap: 7px; padding: 9px; }
+      .toolbar-label { width: 100%; }
+      .toolbar .button { flex: 1 1 auto; padding: 0 9px; }
+      .rank-input { flex: 0 1 90px !important; }
+      .system-layout { grid-template-columns: 1fr; }
+      .sidebar { grid-template-columns: 1fr 1fr; }
+      .display-cell { min-height: 83px; padding: 10px 8px; }
+      .display-value { font-size: 22px; }
+      .display-label { font-size: 8px; }
+      .queue-lane { grid-template-columns: 55px minmax(0, 1fr) 55px; gap: 6px; }
+      .lane-end { min-height: 96px; }
+      .queue-nodes { min-height: 96px; padding: 9px; }
+      .main-board { padding: 9px; }
+      .board-caption { font-size: 8px; }
+      .footer { flex-direction: column; }
+    }
+    @media (max-width: 390px) {
+      h1 { font-size: 21px; }
+      .lesson-card { padding: 12px; }
+      .instruction-list li { grid-template-columns: 20px 65px 1fr; gap: 6px; font-size: 10px; }
+      .complexity { grid-template-columns: 82px 1fr; gap: 8px; }
+      .source-link { padding: 7px; font-size: 9px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .display-cell { padding: 9px 6px; }
+      .display-value { font-size: 19px; }
+      .queue-lane { grid-template-columns: 48px minmax(0, 1fr) 48px; gap: 5px; }
+      .lane-end strong { font-size: 10px; }
+      .lane-end span { font-size: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="course-route" aria-label="課程路線"><a href="index.html">課程首頁</a><span aria-hidden="true">›</span><a href="index.html">資料結構支線</a><span aria-hidden="true">›</span><strong>第 19 關</strong></nav>
+
+    <section class="lesson" aria-labelledby="lesson-title">
+      <div class="lesson-heading"><span class="lesson-number">19</span><div><h1 id="lesson-title">海大餐廳排隊系統</h1><p class="subtitle">先看這一段，再往下玩。</p></div></div>
+      <div class="lesson-grid">
+        <article class="lesson-card">
+          <h2>怎麼玩</h2>
+          <p>你是櫃台人員。每位客人有三項資料：排隊編號、姓名、電話。排隊名單使用「先進先出」的佇列，客人依照登記順序入座。</p>
+          <ol class="instruction-list">
+            <li><span class="step-no">1</span><b>登記候位</b><span>輸入姓名和電話，按「登記候位」。系統發一張號碼單，客人排到最後面。</span></li>
+            <li><span class="step-no">2</span><b>叫下一位</b><span>請排最前面的客人入座。叫號會將客人移出候位隊伍。</span></li>
+            <li><span class="step-no">3</span><b>看下一位</b><span>只查看下一個輪到誰，不會移除客人。</span></li>
+            <li><span class="step-no">4</span><b>候位名單</b><span>依目前順序列出所有客人的編號、姓名和電話。</span></li>
+            <li><span class="step-no">5</span><b>查順位</b><span>輸入排隊編號，查詢客人目前排第幾位。</span></li>
+            <li><span class="step-no">6</span><b>打烊清空</b><span>清空所有候位資料，下一輪編號從 1 開始。</span></li>
+          </ol>
+          <div class="challenge"><span class="challenge-icon">試試看</span><span>登記三位客人、叫號一次，看下一位是誰；再試著查詢候位名單中不同編號的順位。</span></div>
+        </article>
+        <article class="lesson-card">
+          <h2>你會學到什麼</h2>
+          <ul class="concept-list">
+            <li><strong>佇列資料型態</strong>：用 <code>struct Customer</code> 將編號、姓名、電話綁成一筆候位資料，再放進 <code>queue&lt;Customer&gt;</code>。</li>
+            <li><strong>先進先出 FIFO</strong>：先進來的客人先離開隊伍。叫號用 <code>front()</code> 取得隊首，再用 <code>pop()</code> 移除。</li>
+            <li><strong>看與叫是兩回事</strong>：查看只讀取 <code>front()</code>；叫號才會 <code>pop()</code>，不會因為偷看就少一組。</li>
+            <li><strong>空佇列要先檢查</strong>：讀取隊首前先確認 <code>empty()</code>，避免對空佇列操作。</li>
+            <li><strong>查順位要逐一走訪</strong>：標準 queue 沒有索引，複製一份後逐個查看，時間複雜度為 <code>O(n)</code>。</li>
+          </ul>
+          <div class="complexity"><span class="complexity-badge">QUEUE<br>FIFO</span><span><strong>push / front / pop</strong><br>加入隊尾、查看隊首和移除隊首都是常數時間；名單與順位查詢則需逐筆走訪。</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="work-section" aria-labelledby="work-title">
+      <div class="work-heading">
+        <div class="work-title"><span class="lesson-number">19</span><div><h2 id="work-title">海大餐廳排隊系統</h2><p>登記候位 → 叫號入座 → 看佇列怎麼變。</p></div></div>
+        <a class="source-link" href="level-19.cpp" download>↓ 完整 C++ 主控台程式</a>
+      </div>
+
+      <form class="registration" id="register-form">
+        <span class="bar-label">登記</span>
+        <label class="sr-only" for="customer-name">姓名</label><input class="text-field" id="customer-name" name="name" placeholder="姓名，例如 王小明" autocomplete="name" required>
+        <label class="sr-only" for="customer-phone">電話</label><input class="text-field" id="customer-phone" name="phone" placeholder="電話，例如 0912-345-678" inputmode="tel" autocomplete="tel" required>
+        <button class="button button-primary button-register" type="submit">登記候位　push</button>
+        <button class="button button-demo" id="demo-button" type="button">＋ 範例客人</button>
+      </form>
+
+      <div class="toolbar" role="toolbar" aria-label="候位櫃台功能">
+        <span class="toolbar-label">櫃台</span>
+        <button class="button button-primary" id="call-button" type="button">叫下一位　front + pop</button>
+        <button class="button" id="peek-button" type="button">看下一位　front</button>
+        <button class="button" id="list-button" type="button">候位名單</button>
+        <label class="sr-only" for="rank-number">候位編號</label><input class="text-field rank-input" id="rank-number" type="number" min="1" placeholder="編號">
+        <button class="button" id="rank-button" type="button">查順位</button>
+        <button class="button button-close" id="close-button" type="button">↺ 打烊清空</button>
+      </div>
+
+      <div class="system-layout">
+        <section class="main-board" aria-label="候位隊伍與輸出結果">
+          <div class="board-caption"><span>候位隊伍 (QUEUE&lt;CUSTOMER&gt; WAITING)</span><span>候位 <b id="queue-count-caption">0</b> 組</span></div>
+          <div class="display-board" aria-live="polite">
+            <div class="display-cell"><div class="display-label">目前叫號 NOW SERVING</div><div class="display-value" id="now-number">—</div><div class="display-name" id="now-name">尚未叫號</div></div>
+            <div class="display-cell"><div class="display-label">下一位 NEXT</div><div class="display-value" id="next-number">—</div><div class="display-name" id="next-name">沒有入座候位</div></div>
+            <div class="display-cell"><div class="display-label">候位 WAITING</div><div class="display-value" id="waiting-count">0 <small>組</small></div><div class="display-name">依登記順序入座</div></div>
+          </div>
+          <div class="queue-lane" aria-label="候位隊列視覺化">
+            <div class="lane-end"><strong>櫃台</strong><span>← 叫號入座</span></div>
+            <div class="queue-nodes" id="queue-nodes"><div class="queue-empty">（目前沒有候位）</div></div>
+            <div class="lane-end back"><strong>入口</strong><span>登記候位 →</span></div>
+          </div>
+          <div class="queue-legend"><span><span class="legend-chip">front</span> 下一個被叫到的客人</span><span><span class="legend-chip back">back</span> 最晚登記的客人</span><span>每張候位單：編號・姓名・電話</span></div>
+          <h3 class="output-title">輸出（程式印出來的結果）</h3>
+          <div class="output-log" id="output-log" role="log" aria-live="polite"><p>還沒有任何輸出。每做一個操作，這裡會多幾行：你的指令，以及系統印出的結果。</p></div>
+          <div class="start-message"><span class="start-label">START</span><div><strong id="system-status">開始營業：目前沒有人候位</strong><p>輸入姓名和電話，按「登記候位」（或鍵盤 Enter）發出第一張號碼單。想得打字就按「＋ 範例客人」。</p></div></div>
+        </section>
+
+        <aside class="sidebar" aria-label="候位狀態統計">
+          <section class="side-card">
+            <div class="side-heading"><span>佇列現況</span><span>即時更新</span></div>
+            <div class="stats-grid">
+              <div class="stat-box"><div class="stat-label">候位組數 SIZE</div><div class="stat-value" id="stat-size">0</div></div>
+              <div class="stat-box"><div class="stat-label">下一張號碼牌</div><div class="stat-value" id="stat-ticket">1</div></div>
+              <div class="stat-box wide"><div class="stat-label">下一位 FRONT</div><div class="stat-value front" id="stat-front">—</div></div>
+              <div class="stat-box wide"><div class="stat-label">最後一位 BACK</div><div class="stat-value back" id="stat-back">—</div></div>
+            </div>
+          </section>
+          <section class="side-card">
+            <div class="side-heading"><span>入座順序</span><span>先 → 後</span></div>
+            <div class="fifo-copy" id="fifo-copy">還沒有人入座<strong>FIFO：First In, First Out</strong>先登記的客人，會先被叫到。</div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="footer"><span>第 19 關｜海大餐廳排隊系統</span><span><a href="index.html">回課程首頁</a>　・　<code>struct Customer</code> + <code>queue&lt;Customer&gt;</code></span></footer>
+  </main>
+
+  <script>
+    const waiting = [];
+    let nextTicket = 1;
+    let lastCalled = null;
+    const nodes = {
+      queue: document.getElementById("queue-nodes"),
+      output: document.getElementById("output-log"),
+      name: document.getElementById("customer-name"),
+      phone: document.getElementById("customer-phone")
+    };
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+    }
+
+    function writeOutput(command, message, tone = "") {
+      const empty = nodes.output.querySelector("p");
+      if (empty && empty.textContent.startsWith("還沒有任何輸出")) nodes.output.innerHTML = "";
+      const line = document.createElement("p");
+      if (tone) line.className = tone;
+      line.textContent = `> ${command}\n${message}`;
+      nodes.output.append(line);
+      nodes.output.scrollTop = nodes.output.scrollHeight;
+    }
+
+    function renderQueue() {
+      const first = waiting[0] || null;
+      const last = waiting[waiting.length - 1] || null;
+      const queueCount = waiting.length;
+      document.getElementById("queue-count-caption").textContent = queueCount;
+      document.getElementById("waiting-count").innerHTML = `${queueCount} <small>組</small>`;
+      document.getElementById("next-number").textContent = first ? `#${first.number}` : "—";
+      document.getElementById("next-name").textContent = first ? `${first.name}｜${first.phone}` : "沒有入座候位";
+      document.getElementById("stat-size").textContent = queueCount;
+      document.getElementById("stat-ticket").textContent = nextTicket;
+      document.getElementById("stat-front").textContent = first ? `#${first.number} ${first.name}` : "—";
+      document.getElementById("stat-back").textContent = last ? `#${last.number} ${last.name}` : "—";
+      document.getElementById("now-number").textContent = lastCalled ? `#${lastCalled.number}` : "—";
+      document.getElementById("now-name").textContent = lastCalled ? `${lastCalled.name}｜${lastCalled.phone}` : "尚未叫號";
+      document.getElementById("system-status").textContent = queueCount ? `營業中：目前有 ${queueCount} 組候位` : "開始營業：目前沒有人候位";
+      nodes.queue.innerHTML = queueCount ? waiting.map((customer, index) => `
+          <article class="customer-node ${index === 0 ? "front-node" : ""} ${queueCount > 1 && index === queueCount - 1 ? "back-node" : ""}">
+          <div class="node-label"><span>${index === 0 ? "FRONT" : "WAITING"}</span><span>${index + 1} 位</span></div>
+          <div class="node-number">#${customer.number}</div><div class="node-name">${escapeHTML(customer.name)}</div><div class="node-phone">${escapeHTML(customer.phone)}</div>
+        </article>`).join("") : '<div class="queue-empty">（目前沒有候位）</div>';
+      document.getElementById("fifo-copy").innerHTML = queueCount
+        ? `目前有 ${queueCount} 位客人等待入座。<strong>FIFO：First In, First Out</strong>第一張 #${first.number} 會先被叫到。`
+        : `還沒有人入座<strong>FIFO：First In, First Out</strong>先登記的客人，會先被叫到。`;
+    }
+
+    function registerCustomer(name, phone) {
+      const customer = { number: nextTicket++, name: name.trim(), phone: phone.trim() };
+      waiting.push(customer);
+      writeOutput(`登記候位：${customer.name} / ${customer.phone}`, `已發出候位單 #${customer.number}，目前排第 ${waiting.length} 位。`, "success");
+      renderQueue();
+      return customer;
+    }
+
+    document.getElementById("register-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!nodes.name.value.trim() || !nodes.phone.value.trim()) return;
+      registerCustomer(nodes.name.value, nodes.phone.value);
+      nodes.name.value = "";
+      nodes.phone.value = "";
+      nodes.name.focus();
+    });
+
+    document.getElementById("demo-button").addEventListener("click", () => {
+      const examples = [
+        { name: "王小明", phone: "0912-345-678" },
+        { name: "林同學", phone: "0987-654-321" },
+        { name: "陳小姐", phone: "0922-111-888" }
+      ];
+      examples.forEach((customer) => registerCustomer(customer.name, customer.phone));
+    });
+
+    document.getElementById("call-button").addEventListener("click", () => {
+      if (!waiting.length) {
+        writeOutput("叫下一位：front + pop", "還沒有人候位，無法叫號。", "warning");
+        return;
+      }
+      lastCalled = waiting.shift();
+      writeOutput("叫下一位：front + pop", `請 #${lastCalled.number} ${lastCalled.name} 入座！（${lastCalled.phone}）`, "success");
+      renderQueue();
+    });
+
+    document.getElementById("peek-button").addEventListener("click", () => {
+      if (!waiting.length) {
+        writeOutput("看下一位：front", "目前沒有下一位候位客人。", "warning");
+        return;
+      }
+      const customer = waiting[0];
+      writeOutput("看下一位：front（只看，不移除）", `下一位是 #${customer.number} ${customer.name}，電話 ${customer.phone}。隊伍仍有 ${waiting.length} 位。`, "success");
+    });
+
+    document.getElementById("list-button").addEventListener("click", () => {
+      const list = waiting.length
+        ? waiting.map((customer, index) => `${index + 1}. #${customer.number}　${customer.name}　${customer.phone}`).join("\n")
+        : "目前沒有候位客人。";
+      writeOutput("候位名單：由 front 到 back", list);
+    });
+
+    function checkRank() {
+      const number = Number(document.getElementById("rank-number").value);
+      if (!Number.isInteger(number) || number < 1) {
+        writeOutput("查順位", "請先輸入大於 0 的候位編號。", "warning");
+        return;
+      }
+      const position = waiting.findIndex((customer) => customer.number === number);
+      writeOutput(`查順位：候位單 #${number}`, position >= 0
+        ? `#${number} ${waiting[position].name} 目前排第 ${position + 1} 位。`
+        : `找不到候位單 #${number}；可能已入座或編號不存在。`, position >= 0 ? "success" : "warning");
+    }
+
+    document.getElementById("rank-button").addEventListener("click", checkRank);
+    document.getElementById("rank-number").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") checkRank();
+    });
+    document.getElementById("close-button").addEventListener("click", () => {
+      const cleared = waiting.length;
+      waiting.length = 0;
+      nextTicket = 1;
+      lastCalled = null;
+      writeOutput("打烊清空", `已清空 ${cleared} 張候位單，下一輪編號從 1 開始。`, "warning");
+      renderQueue();
+    });
+
+    renderQueue();
+  </script>
+</body>
+</html>

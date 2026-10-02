@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#edf1f5">
+  <title>資料結構闖關｜課程首頁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #172636; --muted: #71869a; --paper: #edf1f5; --panel: #fff; --line: #d6e0e9; --soft: #dfe7ef; --navy: #172430; --teal: #087565; --orange: #bc581c; --orange-soft: #f5e2d2; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; color: var(--ink); background: var(--paper); font-family: "Noto Sans TC", sans-serif; }
+    .shell { width: min(1110px, calc(100% - 42px)); margin: auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; height: 62px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 9px; color: var(--ink); text-decoration: none; font-size: 12px; font-weight: 800; }
+    .brand-mark { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 5px; color: white; background: var(--navy); font-size: 12px; }
+    .branch-tag { padding: 6px 9px; border: 1px solid var(--line); border-radius: 5px; color: var(--muted); background: rgba(255,255,255,.7); font-size: 10px; }
+    .intro { padding: 56px 0 27px; }
+    .eyebrow { color: var(--teal); font: 500 10px "DM Mono", monospace; }
+    h1 { margin: 8px 0 6px; font-size: clamp(26px, 5vw, 38px); line-height: 1.3; letter-spacing: 0; }
+    .intro p { margin: 0; color: var(--muted); font-size: 12px; }
+    .route-title { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 10px; padding-bottom: 9px; border-bottom: 1px solid var(--line); }
+    .route-title h2 { margin: 0; font-size: 13px; }
+    .route-title span { color: var(--muted); font: 400 9px "DM Mono", monospace; }
+    .lesson-card { position: relative; display: grid; grid-template-columns: 65px minmax(0, 1fr) auto; gap: 17px; align-items: center; overflow: hidden; padding: 20px; border: 1px solid var(--line); border-radius: 8px; color: inherit; background: var(--panel); text-decoration: none; box-shadow: 0 9px 22px rgba(32,53,74,.06); transition: transform .18s, box-shadow .18s, border-color .18s; }
+    .lesson-card:hover { transform: translateY(-2px); border-color: #9eb3c4; box-shadow: 0 13px 25px rgba(32,53,74,.1); }
+    .lesson-number { display: grid; width: 59px; height: 59px; place-items: center; border-radius: 8px; color: var(--orange); background: var(--orange-soft); font: 500 18px "DM Mono", monospace; }
+    .card-kicker { color: var(--teal); font: 500 9px "DM Mono", monospace; }
+    .lesson-card h3 { margin: 5px 0 4px; font-size: 16px; }
+    .lesson-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .card-arrow { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--teal); font-size: 17px; }
+    .route-line { display: flex; align-items: center; gap: 9px; margin: 17px 0 0 28px; color: var(--muted); font-size: 10px; }
+    .route-line::before { width: 20px; height: 22px; border-bottom: 1px solid #aebdca; border-left: 1px solid #aebdca; content: ""; }
+    .route-line code { padding: 3px 6px; border-radius: 4px; color: var(--teal); background: #d9ece7; font: 500 9px "DM Mono", monospace; }
+    .footer { display: flex; justify-content: space-between; gap: 15px; margin-top: 50px; padding: 14px 0 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; }
+    @media (max-width: 560px) { .shell { width: calc(100% - 28px); } .intro { padding-top: 38px; } .lesson-card { grid-template-columns: 48px minmax(0,1fr) 27px; gap: 11px; padding: 14px; } .lesson-number { width: 46px; height: 46px; font-size: 15px; } .lesson-card h3 { font-size: 14px; } .lesson-card p { font-size: 10px; } .card-arrow { width: 27px; height: 27px; } .footer { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">DS</span><span>資料結構闖關</span></a>
+    <span class="branch-tag">資料結構支線　/　QUEUE</span>
+  </header>
+  <main class="shell">
+    <section class="intro">
+      <div class="eyebrow">DATA STRUCTURES / LEARNING ROUTE</div>
+      <h1>從資料結構，走進日常系統。</h1>
+      <p>沿著支線闖關，看看每種結構如何解決真實問題。</p>
+    </section>
+    <section aria-labelledby="route-heading">
+      <div class="route-title"><h2 id="route-heading">資料結構支線</h2><span>01 LESSON AVAILABLE</span></div>
+      <a class="lesson-card" href="level-19.html">
+        <span class="lesson-number">19</span>
+        <span><span class="card-kicker">QUEUE &nbsp; / &nbsp; FIFO</span><h3>海大餐廳排隊系統</h3><p>用候位編號、姓名與電話建立候位單，練習登記、叫號、看下一位與查順位。</p></span>
+        <span class="card-arrow" aria-hidden="true">↗</span>
+      </a>
+      <div class="route-line"><span>第 19 關：候位櫃台</span><code>struct Customer</code><code>queue&lt;Customer&gt;</code></div>
+    </section>
+  </main>
+  <footer class="shell footer"><span>資料結構闖關・第 19 關</span><span>海大餐廳排隊系統</span></footer>
+</body>
+</html>
