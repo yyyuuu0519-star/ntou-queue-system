@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#edf1f5">
+  <title>21｜最大堆積排序實驗室</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#172636;--muted:#71869a;--paper:#edf1f5;--panel:#fff;--line:#d6e0e9;--soft:#dfe7ef;--navy:#172430;--teal:#087565;--orange:#bc581c;--orange-soft:#f5e2d2;--shadow:0 9px 22px rgba(32,53,74,.07)}
+    *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:13px "Noto Sans TC",sans-serif}button,input{font:inherit}button{cursor:pointer}.shell{width:min(1190px,calc(100% - 42px));margin:auto}
+    .route{display:flex;gap:8px;padding:11px 0 0;color:var(--muted);font-size:10px}.route a{color:inherit;text-decoration:none}.route a:hover{color:var(--teal)}.hero{padding:20px 0 22px;border-bottom:1px solid var(--line)}.hero-title{display:flex;gap:13px;align-items:start}.number{display:grid;width:31px;height:27px;flex:0 0 auto;place-items:center;border-radius:5px;color:var(--orange);background:var(--orange-soft);font:500 11px "DM Mono",monospace}h1{margin:0;font-size:clamp(24px,4vw,32px);line-height:1.3;letter-spacing:0}.hero p{max-width:760px;margin:7px 0 13px 44px;color:var(--muted);font-size:11px;line-height:1.8}.facts{display:flex;flex-wrap:wrap;gap:7px;margin-left:44px}.fact{display:flex;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:20px;background:#fff;font-size:10px}.fact span{color:var(--muted);font-size:9px}
+    .play{padding:20px 0 28px}.play-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}.play-head h2{margin:0;font-size:20px}.play-head p{margin:3px 0 0;color:var(--muted);font-size:10px}.bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;box-shadow:var(--shadow)}.bar+.bar{margin-top:10px}.barlabel{margin-right:3px;color:var(--muted);font:500 9px "DM Mono",monospace}.presets{display:flex;flex:1;flex-wrap:wrap;gap:6px}.preset{padding:6px 9px;border:1px solid #dae3eb;border-radius:16px;color:#40556b;background:var(--soft);font:500 9px "DM Mono","Noto Sans TC",monospace}.preset:hover,.preset.active{border-color:#d98a5e;background:var(--orange-soft)}.field{width:230px;min-width:0;height:34px;padding:0 10px;border:1px solid #cad6e1;border-radius:5px;outline:none;color:var(--ink);background:var(--soft);font-size:10px}.field:focus{border-color:#708ba3;background:#fff;box-shadow:0 0 0 3px rgba(92,125,154,.12)}.inputgroup{display:flex;gap:5px;margin-left:auto}.btn{min-height:33px;padding:0 11px;border:0;border-radius:5px;color:var(--ink);background:var(--soft);font-size:10px;font-weight:700;transition:transform .15s,filter .15s}.btn:hover{filter:brightness(.97);transform:translateY(-1px)}.btn:disabled{cursor:not-allowed;opacity:.48;transform:none}.btn.dark{color:#fff;background:var(--navy)}.btn.accent{color:#fff;background:var(--orange)}.method{display:inline-flex;gap:3px;padding:3px;border-radius:18px;background:var(--soft)}.method button{padding:6px 10px;border:0;border-radius:15px;color:var(--muted);background:transparent;font-size:9px}.method button.active{color:var(--ink);background:#fff;box-shadow:0 1px 4px #c7d2de}.actions{display:flex;flex-wrap:wrap;gap:7px}.progress{display:flex;min-width:150px;flex:1;align-items:center;gap:8px;color:var(--muted);font:10px "DM Mono",monospace}.progress input{width:100%;accent-color:var(--orange)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 244px;gap:14px;align-items:start;margin-top:13px}.panel{min-width:0;border:1px solid var(--line);border-radius:9px;background:var(--panel);box-shadow:var(--shadow)}.board{padding:14px}.caption{display:flex;justify-content:space-between;gap:12px;margin:1px 1px 10px;color:var(--muted);font:500 9px "DM Mono",monospace}.caption strong{color:var(--ink);font-weight:500}.tree-wrap{display:grid;min-height:270px;place-items:center;overflow:auto;border-radius:7px;background:var(--soft);scrollbar-width:thin}.tree-wrap svg{display:block;width:100%;min-width:520px;height:270px}.empty{color:#8298ac;font-size:12px}.hidden{display:none!important}.edge{stroke:#9aabba;stroke-width:2}.edge.active{stroke:var(--orange);stroke-width:3}.node{fill:#fff;stroke:#94a9bc;stroke-width:2}.node.root{fill:var(--orange-soft);stroke:var(--orange)}.node.focus{fill:#d9ece7;stroke:var(--teal);stroke-width:3}.node-text{fill:var(--ink);font:500 13px "DM Mono",monospace;text-anchor:middle;dominant-baseline:central}.array-title{display:flex;justify-content:space-between;gap:10px;margin:14px 0 7px;color:var(--muted);font:500 9px "DM Mono",monospace}.array{display:flex;min-height:42px;flex-wrap:wrap;gap:5px;padding:10px;border-radius:7px;background:#f2f5f8}.cell{display:grid;min-width:36px;height:31px;place-items:center;padding:0 8px;border:1px solid #c8d4df;border-radius:5px;color:var(--ink);background:#fff;font:500 12px "DM Mono",monospace}.cell.heap{border-color:#8ba4b9;background:#dfe7ef}.cell.sorted{border-color:#77b9aa;color:#075d51;background:#d9ece7}.cell.focus{outline:2px solid var(--orange);outline-offset:1px}.legend{display:flex;flex-wrap:wrap;gap:13px;margin-top:8px;color:var(--muted);font-size:9px}.legend span{display:flex;align-items:center;gap:5px}.swatch{width:9px;height:9px;border:1px solid #8ba4b9;border-radius:2px;background:#dfe7ef}.swatch.sorted{border-color:#77b9aa;background:#d9ece7}.message{min-height:58px;margin-top:12px;padding:10px 12px;border-left:3px solid var(--teal);border-radius:0 6px 6px 0;background:#d9ece7;color:#526f75;font-size:10px;line-height:1.8}.message strong{display:block;margin-bottom:2px;color:var(--ink);font-size:11px}.side{display:grid;gap:12px}.side .panel{padding:13px}.side-title{display:flex;justify-content:space-between;gap:8px;margin:0 0 10px;color:var(--muted);font:500 9px "DM Mono",monospace}.side-title span:last-child{font-family:"Noto Sans TC",sans-serif}.extracts{display:flex;flex-wrap:wrap;gap:5px;min-height:38px}.chip{display:grid;min-width:34px;height:30px;place-items:center;padding:0 8px;border:1px solid #df9b74;border-radius:6px;color:#713a1d;background:var(--orange-soft);font:500 11px "DM Mono",monospace}.chip:first-child{border-color:#77b9aa;color:#075d51;background:#d9ece7}.muted{color:var(--muted);font-size:10px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px}.stat{min-width:0;min-height:54px;padding:8px;border-radius:6px;background:var(--soft)}.stat small{display:block;color:var(--muted);font-size:8px}.stat strong{display:block;overflow:hidden;margin-top:3px;color:var(--ink);font:500 17px "DM Mono",monospace;text-overflow:ellipsis;white-space:nowrap}.stat:nth-child(3) strong{color:var(--orange)}.complexity{display:grid;gap:8px}.complexity-row{display:flex;justify-content:space-between;gap:10px;padding-bottom:7px;border-bottom:1px solid var(--line);color:var(--muted);font-size:9px}.complexity-row:last-child{padding:0;border:0}.complexity-row code{color:var(--ink);font:500 10px "DM Mono",monospace}.history{max-height:230px;overflow:auto}.history button{display:grid;width:100%;grid-template-columns:37px 1fr auto;gap:7px;align-items:center;margin:3px 0;padding:7px;border:0;border-radius:5px;color:#526a83;background:var(--soft);text-align:left;font-size:8px}.history button.active{box-shadow:inset 3px 0 var(--orange);background:#f5e2d2}.history code{color:var(--orange);font:500 8px "DM Mono",monospace}.history small{color:var(--muted);font:8px "DM Mono",monospace}.footer{display:flex;justify-content:space-between;gap:12px;padding:14px 0 20px;border-top:1px solid var(--line);color:var(--muted);font-size:9px}.footer a{color:inherit;text-decoration:none}.footer a:hover{color:var(--teal)}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;clip-path:inset(50%)}
+    @keyframes pop{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.cell,.chip{animation:pop .18s ease-out}
+    @media(max-width:850px){.layout{grid-template-columns:minmax(0,1fr) 205px}.bar{align-items:flex-start}.inputgroup{width:100%;margin-left:0}.field{flex:1}}
+    @media(max-width:650px){.shell{width:calc(100% - 26px)}.hero p,.facts{margin-left:0}.hero{padding-top:17px}.play-head{align-items:start}.layout{grid-template-columns:1fr}.tree-wrap{min-height:245px}.tree-wrap svg{height:245px}.side{grid-template-columns:1fr 1fr}.history-panel{grid-column:1/-1}.bar{gap:6px;padding:9px}.barlabel{width:100%}.presets{width:100%}.actions .btn{flex:1}.progress{min-width:100%}.footer{flex-direction:column}}
+    @media(max-width:390px){.shell{width:calc(100% - 20px)}.side{grid-template-columns:1fr}.history-panel{grid-column:auto}.play-head h2{font-size:18px}.preset{font-size:8px}.inputgroup{flex-wrap:wrap}.inputgroup .field{flex-basis:100%}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="route" aria-label="課程路線"><a href="index.html">課程首頁</a><span>›</span><a href="index.html">資料結構支線</a><span>›</span><strong>第 21 關</strong></nav>
+    <header class="hero">
+      <div class="hero-title"><span class="number">21</span><h1>最大堆積排序實驗室</h1></div>
+      <p>逐步觀察數字如何建成最大堆積，再一次次把堆頂移到排序區。樹形、陣列、比較次數與交換次數會同步更新。</p>
+      <div class="facts"><span class="fact"><span>核心結構</span><strong>最大堆積</strong></span><span class="fact"><span>排序時間</span><strong>O(n log n)</strong></span><span class="fact"><span>原地排序額外空間</span><strong>O(1)</strong></span><span class="fact"><span>建堆</span><strong>O(n)</strong></span></div>
+    </header>
+    <section class="play" aria-labelledby="play-title">
+      <div class="play-head"><div><h2 id="play-title">開始玩</h2><p>選一組數字，逐步看堆積排序如何完成。</p></div></div>
+      <div class="bar"><span class="barlabel">資料</span><div class="presets"><button class="preset active" data-values="50,48,44,35,30,26,10" type="button">範例：7 個數字</button><button class="preset" data-values="9,4,7,1,3,6,2,8" type="button">範例：混合順序</button><button class="preset" data-values="1,2,3,4,5,6,7" type="button">範例：遞增順序</button></div><form class="inputgroup" id="value-form"><label class="sr-only" for="value-input">自訂整數</label><input class="field" id="value-input" placeholder="自訂：輸入整數，以空白或逗號分隔"><button class="btn" type="submit">載入</button></form></div>
+      <div class="bar"><span class="barlabel">建堆方式</span><div class="method" role="group" aria-label="選擇建堆方式"><button class="active" data-method="heapify" type="button">一次建堆 O(n)</button><button data-method="insert" type="button">逐一插入 O(n log n)</button></div><span class="muted" id="method-note">由最後一個非葉節點開始下沉。</span></div>
+      <div class="bar"><span class="barlabel">操作</span><div class="actions"><button class="btn" id="prev" type="button">← 上一步</button><button class="btn dark" id="next" type="button">下一步 →</button><button class="btn" id="play-toggle" type="button">▶ 自動播放</button><button class="btn" id="restart" type="button">↺ 重來</button></div><label class="progress"><span id="progress-label">1 / 1</span><input id="progress" type="range" min="0" max="0" value="0" aria-label="操作進度"></label></div>
+      <div class="layout">
+        <section class="panel board" aria-label="堆積視覺化">
+          <div class="caption"><span>樹（上）＋陣列（下）— 同一份資料</span><strong id="heap-count">n = 0</strong></div>
+          <div class="array-title"><span>TREE ・ 堆積長相（重點看右側）</span><span id="phase-label">準備中</span></div>
+          <div class="tree-wrap"><svg id="tree" role="img" aria-label="最大堆積二元樹"></svg><div class="empty hidden" id="empty-tree">（空）堆裡目前沒有東西</div></div>
+          <div class="array-title"><span>ARRAY ・ 陣列的長相（真正存在記憶體裡）</span><span>綠色：已排序</span></div>
+          <div class="array" id="array" aria-label="堆積陣列"></div>
+          <div class="legend"><span><i class="swatch"></i>目前堆積</span><span><i class="swatch sorted"></i>已排序區</span><span>parent = (i−1) ÷ 2 ・ left = 2i+1 ・ right = 2i+2</span></div>
+          <div class="message" id="message" aria-live="polite"></div>
+        </section>
+        <aside class="side">
+          <section class="panel"><h3 class="side-title"><span>取出的值</span><span>最大到最小</span></h3><div class="extracts" id="extracts"></div></section>
+          <section class="panel"><h3 class="side-title"><span>統計</span><span>LIVE</span></h3><div class="stats"><div class="stat"><small>目前堆積 n</small><strong id="stat-size">0</strong></div><div class="stat"><small>已取出</small><strong id="stat-extracted">0</strong></div><div class="stat"><small>累計比較</small><strong id="stat-comparisons">0</strong></div><div class="stat"><small>累計交換</small><strong id="stat-swaps">0</strong></div></div></section>
+          <section class="panel"><h3 class="side-title"><span>複雜度</span><span>HEAPSORT</span></h3><div class="complexity"><div class="complexity-row"><span>建堆（一次）</span><code>O(n)</code></div><div class="complexity-row"><span>整體時間</span><code>O(n log n)</code></div><div class="complexity-row"><span>原地額外空間</span><code>O(1)</code></div></div></section>
+          <section class="panel history-panel"><h3 class="side-title"><span>歷程</span><span id="history-count">0 步</span></h3><div class="history" id="history"></div></section>
+        </aside>
+      </div>
+    </section>
+    <footer class="footer"><span>第 21 關｜最大堆積排序實驗室</span><span><a href="index.html">回課程首頁</a>　・　Heap / Heapify / Heapsort</span></footer>
+  </main>
+  <script>
+    const defaultValues=[50,48,44,35,30,26,10];
+    let inputValues=[...defaultValues],method="heapify",frames=[],current=0,timer=null;
+    const byId=(id)=>document.getElementById(id);
+    const copy=(array)=>[...array];
+
+    function buildFrames(values,buildMethod){
+      const data=buildMethod==="heapify"?copy(values):[];
+      const events=[];
+      let heapSize=data.length,comparisons=0,swaps=0;
+      const record=(kind,title,detail,focus=[])=>events.push({data:copy(data),heapSize,comparisons,swaps,kind,title,detail,focus:copy(focus)});
+      record("start","準備開始",`輸入資料：${values.join(", ")}。先建立最大堆積，再將堆頂依序移到排序區。`);
+      if(buildMethod==="heapify"){
+        record("build","開始一次建堆","從最後一個非葉節點開始，逐層向下調整。",[]);
+        for(let index=Math.floor(data.length/2)-1;index>=0;index--) siftDown(data,index,heapSize,record,()=>{comparisons++},()=>{swaps++},"建堆");
+      }else{
+        heapSize=0;
+        for(const value of values){
+          data.push(value);heapSize++;
+          const index=data.length-1;
+          record("insert","插入數字",`${value} 放到陣列尾端，接著和父節點比較。`,[index]);
+          let child=index;
+          while(child>0){const parent=Math.floor((child-1)/2);comparisons++;record("compare","比較父節點",`${data[child]} 和父節點 ${data[parent]} 比較。`,[parent,child]);if(data[parent]>=data[child])break;[data[parent],data[child]]=[data[child],data[parent]];swaps++;record("swap","向上交換",`${data[parent]} 與 ${data[child]} 交換，維持最大堆積。`,[parent,child]);child=parent}
+        }
+        record("build","建堆完成","逐一插入完成，現在開始排序。",[]);
+      }
+      heapSize=data.length;
+      record("build-done","最大堆積完成",`堆頂 ${data[0]??"—"} 是目前最大值。開始排序。`,[0]);
+      for(let end=data.length-1;end>0;end--){
+        [data[0],data[end]]=[data[end],data[0]];swaps++;heapSize=end;
+        record("extract","取出最大值",`${data[end]} 移到排序區；剩下 ${heapSize} 個元素仍在堆積中。`,[0,end]);
+        siftDown(data,0,heapSize,record,()=>{comparisons++},()=>{swaps++},"排序");
+      }
+      heapSize=0;
+      record("done","排序完成",`由小到大排序完成：${data.join("  ")}。共比較 ${comparisons} 次、交換 ${swaps} 次。`);
+      return events;
+    }
+
+    function siftDown(data,start,size,record,onCompare,onSwap,label){
+      let index=start;
+      while(true){
+        let largest=index;const left=2*index+1,right=left+1;
+        if(left<size){onCompare();record("compare",`${label}：比較左子節點`,`${data[left]} 與目前候選值 ${data[largest]} 比較。`,[largest,left]);if(data[left]>data[largest])largest=left}
+        if(right<size){onCompare();record("compare",`${label}：比較右子節點`,`${data[right]} 與目前候選值 ${data[largest]} 比較。`,[largest,right]);if(data[right]>data[largest])largest=right}
+        if(largest===index)break;
+        [data[index],data[largest]]=[data[largest],data[index]];onSwap();record("swap",`${label}：向下交換`,`${data[index]} 與 ${data[largest]} 交換。`,[index,largest]);index=largest;
+      }
+    }
+
+    function renderTree(frame){
+      const svg=byId("tree"),values=frame.data.slice(0,frame.heapSize),empty=!values.length;
+      byId("empty-tree").classList.toggle("hidden",!empty);svg.classList.toggle("hidden",empty);svg.replaceChildren();
+      if(empty)return;
+      const levelCount=Math.floor(Math.log2(values.length))+1,width=Math.max(520,Math.pow(2,levelCount-1)*76),height=45+(levelCount-1)*72+44;
+      svg.setAttribute("viewBox",`0 0 ${width} ${height}`);svg.style.height=`${Math.max(245,height)}px`;
+      const point=(index)=>{const level=Math.floor(Math.log2(index+1)),first=Math.pow(2,level)-1,slot=index-first,slots=Math.pow(2,level);return{x:(slot+.5)*width/slots,y:34+level*72}};
+      for(let i=1;i<values.length;i++){const parent=point(Math.floor((i-1)/2)),child=point(i),line=document.createElementNS("http://www.w3.org/2000/svg","line");line.setAttribute("x1",parent.x);line.setAttribute("y1",parent.y+17);line.setAttribute("x2",child.x);line.setAttribute("y2",child.y-17);line.setAttribute("class",frame.focus.includes(i)||frame.focus.includes(Math.floor((i-1)/2))?"edge active":"edge");svg.append(line)}
+      values.forEach((value,index)=>{const p=point(index),circle=document.createElementNS("http://www.w3.org/2000/svg","circle");circle.setAttribute("cx",p.x);circle.setAttribute("cy",p.y);circle.setAttribute("r",17);circle.setAttribute("class",`node${index===0?" root":""}${frame.focus.includes(index)?" focus":""}`);svg.append(circle);const text=document.createElementNS("http://www.w3.org/2000/svg","text");text.setAttribute("x",p.x);text.setAttribute("y",p.y);text.setAttribute("class","node-text");text.textContent=value;svg.append(text)});
+    }
+
+    function render(){
+      const frame=frames[current];if(!frame)return;
+      renderTree(frame);
+      const array=byId("array");array.replaceChildren();
+      frame.data.forEach((value,index)=>{const cell=document.createElement("span");cell.className=`cell ${index<frame.heapSize?"heap":"sorted"}${frame.focus.includes(index)?" focus":""}`;cell.textContent=value;cell.title=index<frame.heapSize?`堆積位置 ${index}`:"已排序";array.append(cell)});
+      byId("heap-count").textContent=`n = ${frame.heapSize}`;byId("phase-label").textContent=frame.kind.toUpperCase();
+      byId("stat-size").textContent=frame.heapSize;byId("stat-extracted").textContent=frame.data.length-frame.heapSize;byId("stat-comparisons").textContent=frame.comparisons;byId("stat-swaps").textContent=frame.swaps;
+      const extractArea=byId("extracts");extractArea.replaceChildren();frame.data.slice(frame.heapSize).reverse().forEach((value)=>{const chip=document.createElement("span");chip.className="chip";chip.textContent=value;extractArea.append(chip)});if(frame.heapSize===frame.data.length){const empty=document.createElement("span");empty.className="muted";empty.textContent="尚未取出";extractArea.append(empty)}
+      byId("message").innerHTML=`<strong>${frame.title}</strong>${frame.detail}`;
+      byId("progress").max=String(frames.length-1);byId("progress").value=String(current);byId("progress-label").textContent=`${current+1} / ${frames.length}`;
+      byId("prev").disabled=current===0;byId("next").disabled=current===frames.length-1;
+      byId("history-count").textContent=`${frames.length} 步`;
+      const history=byId("history");history.replaceChildren();
+      frames.slice(Math.max(0,current-5),current+6).forEach((item,offset)=>{const index=Math.max(0,current-5)+offset,button=document.createElement("button");button.type="button";button.classList.toggle("active",index===current);button.innerHTML=`<code>${item.kind.toUpperCase()}</code><span>${item.title}</span><small>n ${item.heapSize}</small>`;button.addEventListener("click",()=>{stopPlay();current=index;render()});history.append(button)});
+    }
+
+    function stopPlay(){if(timer)clearInterval(timer);timer=null;byId("play-toggle").textContent="▶ 自動播放"}
+    function load(values){stopPlay();inputValues=values;frames=buildFrames(inputValues,method);current=0;render()}
+    document.querySelectorAll("[data-values]").forEach((button)=>button.addEventListener("click",()=>{document.querySelectorAll(".preset").forEach((item)=>item.classList.remove("active"));button.classList.add("active");load(button.dataset.values.split(",").map(Number))}));
+    document.querySelectorAll("[data-method]").forEach((button)=>button.addEventListener("click",()=>{method=button.dataset.method;document.querySelectorAll("[data-method]").forEach((item)=>item.classList.toggle("active",item===button));byId("method-note").textContent=method==="heapify"?"由最後一個非葉節點開始下沉。":"逐一插入並向上調整，建堆成本較高。";load(inputValues)}));
+    byId("value-form").addEventListener("submit",(event)=>{event.preventDefault();const raw=byId("value-input").value.trim(),tokens=raw.split(/[\s,，]+/).filter(Boolean);if(!tokens.length||tokens.some((token)=>! /^[-]?\d+$/.test(token))||tokens.length>31){byId("message").innerHTML="<strong>輸入格式不正確</strong>請輸入 1 到 31 個整數，以空白或逗號分隔。";return}document.querySelectorAll(".preset").forEach((item)=>item.classList.remove("active"));load(tokens.map(Number));byId("value-input").value=""});
+    byId("prev").addEventListener("click",()=>{stopPlay();current=Math.max(0,current-1);render()});byId("next").addEventListener("click",()=>{stopPlay();current=Math.min(frames.length-1,current+1);render()});byId("progress").addEventListener("input",()=>{stopPlay();current=Number(byId("progress").value);render()});
+    byId("play-toggle").addEventListener("click",()=>{if(timer){stopPlay();return}if(current===frames.length-1)current=0;byId("play-toggle").textContent="Ⅱ 暫停播放";timer=setInterval(()=>{if(current>=frames.length-1){stopPlay();return}current++;render()},650)});
+    byId("restart").addEventListener("click",()=>{stopPlay();current=0;render()});
+    document.addEventListener("keydown",(event)=>{if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName))return;if(event.code==="ArrowRight")byId("next").click();if(event.code==="ArrowLeft")byId("prev").click();if(event.code==="Space"){event.preventDefault();byId("play-toggle").click()}});
+    load(defaultValues);
+  </script>
+</body>
+</html>
