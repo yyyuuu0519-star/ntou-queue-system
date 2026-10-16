@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#edf1f5">
+  <title>22｜雜湊表探險</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#172636;--muted:#71869a;--paper:#edf1f5;--panel:#fff;--line:#d6e0e9;--soft:#dfe7ef;--navy:#172430;--teal:#087565;--orange:#bc581c;--orange-soft:#f5e2d2;--shadow:0 9px 22px rgba(32,53,74,.07)}
+    *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:13px "Noto Sans TC",sans-serif}button,input{font:inherit}button{cursor:pointer}.shell{width:min(1190px,calc(100% - 42px));margin:auto}.route{display:flex;gap:8px;padding:11px 0 0;color:var(--muted);font-size:10px}.route a,.footer a{color:inherit;text-decoration:none}.route a:hover,.footer a:hover{color:var(--teal)}
+    .hero{padding:20px 0 22px;border-bottom:1px solid var(--line)}.hero-title{display:flex;gap:13px;align-items:start}.number{display:grid;width:31px;height:27px;flex:0 0 auto;place-items:center;border-radius:5px;color:var(--orange);background:var(--orange-soft);font:500 11px "DM Mono",monospace}h1{margin:0;font-size:clamp(24px,4vw,32px);line-height:1.3;letter-spacing:0}.hero p{max-width:760px;margin:7px 0 13px 44px;color:var(--muted);font-size:11px;line-height:1.8}.facts{display:flex;flex-wrap:wrap;gap:7px;margin-left:44px}.fact{display:flex;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:20px;background:#fff;font-size:10px}.fact span{color:var(--muted);font-size:9px}
+    .lesson{padding:19px 0 24px;border-bottom:1px solid var(--line)}.section-head{display:flex;gap:13px;align-items:start;margin-bottom:15px}.section-head h2{margin:0;font-size:20px}.section-head p{margin:3px 0 0;color:var(--muted);font-size:10px}.lesson-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card,.panel{min-width:0;border:1px solid var(--line);border-radius:9px;background:var(--panel);box-shadow:var(--shadow)}.card{padding:16px 18px}.card h3{margin:0 0 7px;font-size:13px}.card p{margin:6px 0;color:#5e7590;font-size:10px;line-height:1.8}.steps,.concepts{margin:0;padding:0;list-style:none}.steps li{display:grid;grid-template-columns:20px 1fr;gap:8px;margin:6px 0;color:#526a83;font-size:10px;line-height:1.7}.step-no{display:grid;width:18px;height:18px;place-items:center;border-radius:5px;background:#e5ebf1;color:#314961;font:500 9px "DM Mono",monospace}.concepts li{position:relative;margin:6px 0;padding-left:14px;color:#526a83;font-size:10px;line-height:1.7}.concepts li:before{position:absolute;left:0;color:var(--orange);content:"●";font-size:8px}.concepts strong{color:var(--ink)}.tip{display:grid;grid-template-columns:58px 1fr;gap:10px;align-items:center;margin-top:10px;padding:9px 11px;border-left:3px solid var(--teal);border-radius:0 6px 6px 0;background:#d9ece7;color:#526f75;font-size:9px;line-height:1.7}.tip-mark{display:grid;min-height:44px;place-items:center;border-radius:5px;color:#fff;background:var(--teal);font-size:9px;font-weight:800}
+    .play{padding:19px 0 29px}.play-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:13px}.play-head h2{margin:0;font-size:20px}.play-head p{margin:3px 0 0;color:var(--muted);font-size:10px}.bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;box-shadow:var(--shadow)}.bar+.bar{margin-top:10px}.barlabel{margin-right:3px;color:var(--muted);font:500 9px "DM Mono",monospace}.segmented{display:inline-flex;gap:3px;padding:3px;border-radius:18px;background:var(--soft)}.segmented button{padding:7px 12px;border:0;border-radius:15px;color:var(--muted);background:transparent;font-size:10px}.segmented button.active{color:var(--ink);background:#fff;box-shadow:0 1px 4px #c7d2de}.presets{display:flex;flex:1;flex-wrap:wrap;gap:6px}.preset{padding:6px 9px;border:1px solid #dae3eb;border-radius:16px;color:#40556b;background:var(--soft);font:500 9px "DM Mono","Noto Sans TC",monospace}.preset:hover,.preset.active{border-color:#d98a5e;background:var(--orange-soft)}.field{width:210px;min-width:0;height:34px;padding:0 10px;border:1px solid #cad6e1;border-radius:5px;outline:none;color:var(--ink);background:var(--soft);font-size:10px}.field:focus{border-color:#708ba3;background:#fff;box-shadow:0 0 0 3px rgba(92,125,154,.12)}.inputgroup{display:flex;gap:5px;margin-left:auto}.btn{min-height:33px;padding:0 11px;border:0;border-radius:5px;color:var(--ink);background:var(--soft);font-size:10px;font-weight:700;transition:transform .15s,filter .15s}.btn:hover{filter:brightness(.97);transform:translateY(-1px)}.btn:disabled{cursor:not-allowed;opacity:.48;transform:none}.btn.dark{color:#fff;background:var(--navy)}.btn.accent{color:#fff;background:var(--orange)}.actions{display:flex;flex-wrap:wrap;gap:7px}.progress{display:flex;min-width:140px;flex:1;align-items:center;gap:8px;color:var(--muted);font:10px "DM Mono",monospace}.progress input{width:100%;accent-color:var(--orange)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:13px;align-items:start;margin-top:13px}.board,.side-card{min-width:0;border:1px solid var(--line);border-radius:9px;background:#fff;box-shadow:var(--shadow)}.board{padding:13px}.board-caption{display:flex;justify-content:space-between;gap:10px;margin:1px 1px 9px;color:var(--muted);font:500 9px "DM Mono",monospace}.tables{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hash-panel{min-width:0;padding:9px;border-radius:7px;background:var(--soft)}.hash-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;color:var(--ink);font-size:10px;font-weight:700}.hash-head small{color:var(--muted);font:9px "DM Mono",monospace}.bucket-list{display:grid;gap:3px}.bucket{display:grid;grid-template-columns:27px minmax(0,1fr);gap:7px;align-items:center;min-height:22px;padding:2px 5px;border:1px solid transparent;border-radius:4px;background:rgba(255,255,255,.58)}.bucket.highlight{border-color:#d99064;background:var(--orange-soft)}.bucket-index{color:#72869a;font:9px "DM Mono",monospace}.bucket-values{display:flex;min-height:18px;flex-wrap:wrap;align-items:center;gap:4px}.empty-cell{color:#99aabb;font:9px "DM Mono",monospace}.key-chip{display:grid;min-width:27px;height:19px;place-items:center;padding:0 5px;border:1px solid #8ba4b9;border-radius:4px;color:#243a4f;background:#fff;font:500 9px "DM Mono",monospace}.key-chip.active{border-color:var(--orange);color:#7c3b18;background:#ffe8d5}.key-chip.tombstone{border-style:dashed;color:var(--orange);background:#fbf0e8}.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;color:var(--muted);font-size:9px}.legend span{display:flex;align-items:center;gap:5px}.dot{width:9px;height:9px;border:1px solid #8ba4b9;border-radius:2px;background:#fff}.dot.focus{border-color:var(--orange);background:var(--orange-soft)}.message{min-height:57px;margin-top:11px;padding:9px 11px;border-left:3px solid var(--teal);border-radius:0 6px 6px 0;background:#d9ece7;color:#526f75;font-size:10px;line-height:1.75}.message.warning{border-color:var(--orange);background:var(--orange-soft);color:#715c4d}.message strong{display:block;margin-bottom:2px;color:var(--ink);font-size:11px}.quiz{display:none;margin-top:8px;padding:9px;border:1px solid var(--line);border-radius:6px;background:#fff}.side{display:grid;gap:11px}.side-card{padding:12px}.side-title{display:flex;justify-content:space-between;gap:8px;margin:0 0 9px;color:var(--muted);font:500 9px "DM Mono",monospace}.side-title span:last-child{font-family:"Noto Sans TC",sans-serif}.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px}.stat{min-width:0;min-height:50px;padding:8px;border-radius:6px;background:var(--soft)}.stat small{display:block;color:var(--muted);font-size:8px}.stat strong{display:block;overflow:hidden;margin-top:3px;color:var(--ink);font:500 17px "DM Mono",monospace;text-overflow:ellipsis;white-space:nowrap}.stat strong.accent{color:var(--orange)}.loadbar{height:7px;margin:9px 0 4px;overflow:hidden;border-radius:8px;background:var(--soft)}.loadbar span{display:block;height:100%;width:0;border-radius:8px;background:var(--teal);transition:width .2s}.load-caption{display:flex;justify-content:space-between;color:var(--muted);font:9px "DM Mono",monospace}.complexity{display:grid;gap:7px}.complexity-row{display:flex;justify-content:space-between;gap:8px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--muted);font-size:9px}.complexity-row:last-child{padding:0;border:0}.complexity-row code{color:var(--ink);font:500 9px "DM Mono",monospace}.history{max-height:205px;overflow:auto}.history button{display:grid;width:100%;grid-template-columns:32px 1fr auto;gap:6px;align-items:center;margin:3px 0;padding:6px;border:0;border-radius:5px;color:#526a83;background:var(--soft);text-align:left;font-size:8px}.history button.active{box-shadow:inset 3px 0 var(--orange);background:#f5e2d2}.history code{color:var(--orange);font:500 8px "DM Mono",monospace}.history small{color:var(--muted);font:8px "DM Mono",monospace}.footer{display:flex;justify-content:space-between;gap:12px;padding:14px 0 20px;border-top:1px solid var(--line);color:var(--muted);font-size:9px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;clip-path:inset(50%)}
+    @keyframes arrive{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}.key-chip{animation:arrive .15s ease-out}
+    @media(max-width:850px){.layout{grid-template-columns:minmax(0,1fr) 205px}.inputgroup{width:100%;margin-left:0}.field{flex:1}.bar{align-items:flex-start}}
+    @media(max-width:650px){.shell{width:calc(100% - 26px)}.hero p,.facts{margin-left:0}.lesson-grid{grid-template-columns:1fr}.play-head{align-items:start}.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.history-card{grid-column:1/-1}.bar{gap:6px;padding:9px}.barlabel{width:100%}.presets{width:100%}.actions{width:100%}.actions .btn{flex:1}.progress{min-width:100%}.tables{gap:6px}.hash-panel{padding:6px}.bucket{grid-template-columns:22px minmax(0,1fr);gap:4px;padding:2px}.key-chip{min-width:23px;padding:0 3px;font-size:8px}.footer{flex-direction:column}}
+    @media(max-width:390px){.shell{width:calc(100% - 20px)}.side{grid-template-columns:1fr}.history-card{grid-column:auto}.tables{grid-template-columns:1fr}.hash-panel{padding:9px}.bucket{grid-template-columns:27px minmax(0,1fr);gap:7px;padding:2px 5px}.key-chip{min-width:27px;padding:0 5px;font-size:9px}.inputgroup{flex-wrap:wrap}.inputgroup .field{flex-basis:100%}.section-head h2{font-size:18px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="route" aria-label="課程路線"><a href="index.html">課程首頁</a><span>›</span><a href="index.html">資料結構支線</a><span>›</span><strong>第 22 關</strong></nav>
+    <header class="hero">
+      <div class="hero-title"><span class="number">22</span><h1>雜湊表探險：一個 key 要去哪裡？</h1></div>
+      <p>用同一串資料同時觀察鏈結法與開放定址。雜湊函式固定為 <code>h(key) = key % 13</code>，碰撞時看看兩種方法怎麼替資料找位置。</p>
+      <div class="facts"><span class="fact"><span>雜湊函式</span><strong>key % 13</strong></span><span class="fact"><span>表格容量 m</span><strong>13（索引 0–12）</strong></span><span class="fact"><span>碰撞處理</span><strong>Chaining / Linear Probing</strong></span><span class="fact"><span>刪除標記</span><strong>墓碑 Tombstone</strong></span></div>
+    </header>
+    <section class="lesson">
+      <div class="section-head"><span class="number">01</span><div><h2>怎麼玩・你會學到什麼</h2><p>先看這一段，再往下玩。</p></div></div>
+      <div class="lesson-grid">
+        <article class="card"><h3>怎麼玩</h3><p>兩張表使用相同的 13 格與雜湊函式。輸入整數後，先算出它的 home bucket，再觀察碰撞後的位置。</p><div class="small-title">演示模式</div><ol class="steps"><li><span class="step-no">1</span><span>選預設資料或輸入自訂數列；數列中的每個數字會依序插入。</span></li><li><span class="step-no">2</span><span>按「下一步」觀察資料如何進入鏈結法與線性探測表。</span></li><li><span class="step-no">3</span><span>也可單獨插入、搜尋或刪除一個 key，查看比較路徑與統計。</span></li><li><span class="step-no">4</span><span>在線性探測中刪除會留下墓碑，搜尋才能繼續穿過空位。</span></li></ol><div class="tip"><span class="tip-mark">操作</span><span>→ 下一步・← 上一步・空白鍵播放／暫停；點選歷程可跳到該步。</span></div></article>
+        <article class="card"><h3>你會學到什麼</h3><ul class="concepts"><li><strong>雜湊函式</strong>：`key % 13` 把整數映射到 0–12；負數也會正規化到合法索引。</li><li><strong>碰撞</strong>：不同 key 得到相同索引時，必須用碰撞處理方法安排資料。</li><li><strong>鏈結法</strong>：同一格可以存放多筆資料，搜尋時沿著該格的串列比較。</li><li><strong>線性探測</strong>：碰撞後依序查看下一格；容量有限，表格滿了就無法再插入。</li><li><strong>刪除陷阱</strong>：直接清空探測路徑會讓後續 key 搜尋失敗，所以用墓碑標記。</li><li><strong>負載因子</strong>：α = n / m；α 越高，開放定址通常需要探測越多格。</li></ul><div class="tip"><span class="tip-mark">建議順序</span><span>先試 1、14、27 看碰撞，再搜尋和刪除 14，觀察墓碑如何保住 27 的搜尋路徑。</span></div></article>
+      </div>
+    </section>
+    <section class="play" aria-labelledby="play-title">
+      <div class="play-head"><div><div class="section-head" style="margin:0"><span class="number">02</span><div><h2 id="play-title">開始玩</h2><p>同一串資料，同時餵給兩張表 → 看兩種碰撞解法各自怎麼收場。</p></div></div></div></div>
+      <div class="bar"><span class="barlabel">模式</span><div class="segmented" role="group" aria-label="操作模式"><button class="active" data-mode="demo" type="button">演示模式</button><button data-mode="challenge" type="button">闖關模式</button></div><span class="muted" id="mode-note">逐步查看每次插入結果。</span></div>
+      <div class="bar"><span class="barlabel">關卡</span><div class="presets"><button class="preset active" data-keys="1,14,27,9,22" type="button">1・14・27・9・22 碰撞三連</button><button class="preset" data-keys="10,23,36,4,17" type="button">10・23・36・4・17 同格衝突</button><button class="preset" data-keys="1,14,27" data-delete="14" type="button">刪除 14：墓碑陷阱</button></div><form class="inputgroup" id="custom-form"><label class="sr-only" for="custom-input">自訂數列</label><input class="field" id="custom-input" placeholder="自訂：整數以空白或逗號分隔"><button class="btn" type="submit">載入</button></form></div>
+      <div class="bar"><span class="barlabel">操作</span><div class="actions"><button class="btn" id="prev" type="button">← 上一步</button><button class="btn dark" id="next" type="button">下一步 →</button><button class="btn" id="autoplay" type="button">▶ 自動播放</button><button class="btn" id="restart" type="button">↺ 重來</button></div><label class="progress"><span id="progress-label">1 / 1</span><input id="progress" type="range" min="0" max="0" value="0" aria-label="操作進度"></label></div>
+      <div class="bar"><span class="barlabel">單步操作</span><form class="inputgroup" id="operation-form"><label class="sr-only" for="operation-key">操作 key</label><input class="field" id="operation-key" type="number" step="1" placeholder="輸入整數 key"><button class="btn" data-operation="insert" type="submit">＋ 插入</button><button class="btn" data-operation="search" type="button">⌕ 搜尋</button><button class="btn accent" data-operation="delete" type="button">− 刪除</button></form></div>
+      <div class="layout">
+        <section class="board" aria-label="雜湊表視覺化">
+          <div class="board-caption"><span>兩張雜湊表・同一串資料</span><strong id="state-label">n = 0・α = 0.00</strong></div>
+          <div class="tables"><section class="hash-panel"><div class="hash-head"><span>鏈結法 Chaining</span><small>m = 13</small></div><div class="bucket-list" id="chain-table"></div></section><section class="hash-panel"><div class="hash-head"><span>開放定址 Linear Probing</span><small>m = 13</small></div><div class="bucket-list" id="probe-table"></div></section></div>
+          <div class="legend"><span><i class="dot"></i>一般資料</span><span><i class="dot focus"></i>本步探測位置</span><span>h(key) = ((key % 13) + 13) % 13</span></div>
+          <div class="message" id="message" aria-live="polite"><strong>準備開始</strong>選擇一個關卡或輸入數列載入。</div><div class="quiz" id="quiz"></div>
+        </section>
+        <aside class="side">
+          <section class="side-card"><h3 class="side-title"><span>載入因子</span><span>α = n / m</span></h3><div class="stats"><div class="stat"><small>n 資料數</small><strong id="stat-n">0</strong></div><div class="stat"><small>m 格數</small><strong>13</strong></div><div class="stat"><small>α 載入因子</small><strong class="accent" id="stat-alpha">0.00</strong></div><div class="stat"><small>平均比較</small><strong id="stat-compare">0</strong></div></div><div class="loadbar"><span id="load-fill"></span></div><div class="load-caption"><span>α = n / 13</span><span id="load-warning">容量上限 13</span></div></section>
+          <section class="side-card"><h3 class="side-title"><span>本次結果</span><span>LIVE</span></h3><div class="stats"><div class="stat"><small>鏈結法比較</small><strong id="chain-compare">0</strong></div><div class="stat"><small>線性探測格數</small><strong id="probe-count">0</strong></div><div class="stat"><small>碰撞次數</small><strong class="accent" id="collision-count">0</strong></div><div class="stat"><small>累計操作</small><strong id="operation-count">0</strong></div></div></section>
+          <section class="side-card"><h3 class="side-title"><span>時間複雜度</span><span>EXPECTED</span></h3><div class="complexity"><div class="complexity-row"><span>鏈結法平均</span><code>O(1 + α)</code></div><div class="complexity-row"><span>線性探測平均*</span><code>O(1)</code></div><div class="complexity-row"><span>最差搜尋</span><code>O(n)</code></div><div class="complexity-row"><span>額外空間</span><code>O(m + n)</code></div></div><p class="muted">* 負載因子低時的期望值；α 接近 1 時會變慢。</p></section>
+          <section class="side-card history-card"><h3 class="side-title"><span>歷程</span><span id="history-count">0 步</span></h3><div class="history" id="history"></div></section>
+        </aside>
+      </div>
+    </section>
+    <footer class="footer"><span>第 22 關｜雜湊表探險</span><span><a href="index.html">回課程首頁</a>　・　Hash / Chaining / Linear Probing</span></footer>
+  </main>
+  <script>
+    const SIZE=13,TOMBSTONE="__TOMBSTONE__";
+    let baseActions=[],frames=[],current=0,mode="demo",timer=null,score=0,challengeAsked=-1,challengeVisible=false;
+    const byId=(id)=>document.getElementById(id);
+    const hash=(key)=>((key%SIZE)+SIZE)%SIZE;
+    const emptyState=()=>({chains:Array.from({length:SIZE},()=>[]),slots:Array(SIZE).fill(null),size:0,comparisons:0,probes:0,collisions:0,operations:0});
+    const cloneState=(state)=>({...state,chains:state.chains.map((bucket)=>[...bucket]),slots:[...state.slots]});
+
+    function applyAction(previous,action){
+      const state=cloneState(previous),bucket=hash(action.key),path=[],summary=[];let chainComparisons=0,probeCount=0,collision=false,found=false,success=false;
+      state.operations++;
+      if(action.type==="insert"){
+        for(const value of state.chains[bucket]){chainComparisons++;if(value===action.key){found=true;break}}
+        if(found){summary.push(`${action.key} 已存在，未重複插入。`)}else{
+          if(state.chains[bucket].length)collision=true;
+          state.chains[bucket].push(action.key);state.size++;success=true;summary.push(`${action.key} 的 home bucket 是 ${bucket}，加入鏈結法第 ${bucket} 格。`);
+        }
+        let firstTombstone=-1,insertedAt=-1;
+        for(let step=0;step<SIZE;step++){
+          const index=(bucket+step)%SIZE;path.push(index);probeCount++;
+          const value=state.slots[index];
+          if(value===action.key){found=true;summary.push(`線性探測在第 ${index} 格找到相同 key，不重複插入。`);break}
+          if(value===TOMBSTONE){if(firstTombstone<0)firstTombstone=index;collision=true;continue}
+          if(value===null){if(step>0)collision=true;insertedAt=firstTombstone>=0?firstTombstone:index;break}
+          collision=true;
+        }
+        if(!found){if(insertedAt<0&&firstTombstone>=0)insertedAt=firstTombstone;if(insertedAt<0){summary.push("線性探測表已滿，無法插入。")}else{state.slots[insertedAt]=action.key;if(!success){state.chains[bucket].push(action.key);state.size++;success=true}summary.push(`${action.key} 經 ${probeCount} 格探測後放入第 ${insertedAt} 格。`);}}
+      }else if(action.type==="search"){
+        const chain=state.chains[bucket];for(const value of chain){chainComparisons++;if(value===action.key){found=true;break}}
+        summary.push(found?`鏈結法在第 ${bucket} 格找到 ${action.key}。`:`鏈結法在第 ${bucket} 格找不到 ${action.key}。`);
+        for(let step=0;step<SIZE;step++){const index=(bucket+step)%SIZE;path.push(index);probeCount++;const value=state.slots[index];if(value===null)break;if(value===action.key){found=true;break}}
+        summary.push(found?`線性探測沿 ${path.join(" → ")} 找到 ${action.key}。`:`線性探測沿 ${path.join(" → ")} 找不到 ${action.key}。`);
+      }else if(action.type==="delete"){
+        const chain=state.chains[bucket],chainIndex=chain.indexOf(action.key);chainComparisons=chainIndex<0?chain.length:chainIndex+1;
+        if(chainIndex>=0){chain.splice(chainIndex,1);state.size--;success=true}
+        summary.push(chainIndex>=0?`鏈結法從第 ${bucket} 格刪除 ${action.key}。`:`鏈結法找不到 ${action.key}。`);
+        let foundIndex=-1;
+        for(let step=0;step<SIZE;step++){const index=(bucket+step)%SIZE;path.push(index);probeCount++;const value=state.slots[index];if(value===null)break;if(value===action.key){foundIndex=index;break}}
+        if(foundIndex>=0){state.slots[foundIndex]=TOMBSTONE;summary.push(`線性探測將第 ${foundIndex} 格標為墓碑，保留後續 key 的搜尋路徑。`)}else summary.push(`線性探測找不到 ${action.key}，表格沒有變更。`);
+      }
+      state.comparisons+=chainComparisons+probeCount;state.probes=probeCount;state.collisions+=collision?1:0;
+      return {state,action,bucket,path,chainComparisons,probeCount,collision,success,summary:summary.join(" ")};
+    }
+
+    function buildFrames(actions){
+      const state=emptyState(),out=[{state:cloneState(state),title:"準備開始",detail:"輸入資料後，兩種方法會同時使用 h(key) = key % 13。",action:null,bucket:-1,path:[],chainComparisons:0,probeCount:0,collision:false}];
+      for(const action of actions){const result=applyAction(state,action);Object.assign(state,result.state);out.push({...result,title:`${actionLabel(action.type)} ${action.key}`,detail:result.summary})}
+      return out;
+    }
+    function actionLabel(type){return{insert:"插入",search:"搜尋",delete:"刪除"}[type]}
+    function renderTable(containerId,kind,frame){
+      const container=byId(containerId);container.replaceChildren();
+      for(let index=0;index<SIZE;index++){
+        const row=document.createElement("div");row.className=`bucket${frame.path.includes(index)?" highlight":""}`;
+        const label=document.createElement("span");label.className="bucket-index";label.textContent=index;row.append(label);
+        const values=document.createElement("div");values.className="bucket-values";
+        const keys=kind==="chain"?frame.state.chains[index]:[frame.state.slots[index]];
+        const visible=keys.filter((value)=>value!==null);
+        if(!visible.length){const empty=document.createElement("span");empty.className="empty-cell";empty.textContent="∅";values.append(empty)}
+        for(const value of visible){const chip=document.createElement("span");chip.className=`key-chip${value===TOMBSTONE?" tombstone":""}${frame.action?.key===value?" active":""}`;chip.textContent=value===TOMBSTONE?"墓碑":value;values.append(chip)}
+        row.append(values);container.append(row);
+      }
+    }
+    function render(){
+      const frame=frames[current];if(!frame)return;
+      renderTable("chain-table","chain",frame);renderTable("probe-table","probe",frame);
+      const n=frame.state.size,alpha=n/SIZE;
+      byId("state-label").textContent=`n = ${n}・α = ${alpha.toFixed(2)}`;byId("stat-n").textContent=n;byId("stat-alpha").textContent=alpha.toFixed(2);byId("stat-compare").textContent=frame.chainComparisons+frame.probeCount;
+      byId("chain-compare").textContent=frame.chainComparisons;byId("probe-count").textContent=frame.probeCount;byId("collision-count").textContent=frame.state.collisions;byId("operation-count").textContent=frame.state.operations;
+      byId("load-fill").style.width=`${Math.min(100,alpha*100)}%`;byId("load-warning").textContent=alpha>=.7?"α ≥ 0.7：留意效能":"容量上限 13";
+      const message=byId("message");message.classList.toggle("warning",frame.collision);message.innerHTML=`<strong>${frame.title}${frame.collision?"・碰撞":""}</strong>${frame.detail}`;
+      byId("progress").max=String(frames.length-1);byId("progress").value=String(current);byId("progress-label").textContent=`${current+1} / ${frames.length}`;
+      byId("prev").disabled=current===0;byId("next").disabled=current===frames.length-1;byId("history-count").textContent=`${frames.length-1} 步`;
+      const history=byId("history");history.replaceChildren();frames.slice(Math.max(0,current-5),current+6).forEach((item,offset)=>{const index=Math.max(0,current-5)+offset,button=document.createElement("button");button.type="button";button.classList.toggle("active",index===current);button.innerHTML=`<code>${item.action?actionLabel(item.action.type).toUpperCase():"START"}</code><span>${item.title}</span><small>n ${item.state.size}</small>`;button.addEventListener("click",()=>{stopPlay();current=index;hideQuiz();render()});history.append(button)});
+    }
+    function hideQuiz(){byId("quiz").style.display="none";challengeVisible=false}
+    function stopPlay(){if(timer)clearInterval(timer);timer=null;byId("autoplay").textContent="▶ 自動播放"}
+    function loadActions(actions){stopPlay();hideQuiz();baseActions=actions.map((action)=>({...action}));frames=buildFrames(baseActions);current=0;challengeAsked=-1;render()}
+    function appendOperation(type,key){if(!Number.isSafeInteger(key)){showError("請輸入有效的整數 key。");return}if(type==="insert"&&frames.at(-1).state.size>=SIZE){showError("目前資料已達 13 筆上限，請先刪除資料再插入。");return}loadActions([...baseActions,{type,key}]);current=frames.length-1;render()}
+    function showError(text){byId("message").classList.add("warning");byId("message").innerHTML=`<strong>無法執行</strong>${text}`}
+    function stepForward(){if(current>=frames.length-1)return;const next=current+1;if(mode==="challenge"&&frames[next].action?.type==="insert"&&challengeAsked!==next){showQuiz(next);return}current=next;render()}
+    function showQuiz(index){challengeAsked=index;challengeVisible=true;const frame=frames[index],quiz=byId("quiz");quiz.style.display="block";quiz.innerHTML=`<strong>闖關題：</strong>${frame.action.key} % 13 會碰撞嗎？　<button class="btn" data-answer="yes" type="button">會碰撞</button> <button class="btn" data-answer="no" type="button">不會碰撞</button>`;quiz.querySelectorAll("[data-answer]").forEach((button)=>button.addEventListener("click",()=>{const guess=button.dataset.answer==="yes",correct=guess===frame.collision;if(correct)score+=10;quiz.innerHTML=`<strong>${correct?"答對 +10 分":"再看一次碰撞路徑"}・目前 ${score} 分</strong>${frame.detail}`;setTimeout(()=>{if(!challengeVisible)return;challengeVisible=false;quiz.style.display="none";current=index;render()},700)}))}
+    function loadPreset(values,deleteKey=null){const actions=values.map((key)=>({type:"insert",key}));if(deleteKey!==null)actions.push({type:"delete",key:deleteKey},{type:"search",key:values.at(-1)});loadActions(actions)}
+    document.querySelectorAll("[data-mode]").forEach((button)=>button.addEventListener("click",()=>{mode=button.dataset.mode;document.querySelectorAll("[data-mode]").forEach((item)=>item.classList.toggle("active",item===button));byId("mode-note").textContent=mode==="demo"?"逐步查看每次插入結果。":`先預測碰撞再揭曉・目前 ${score} 分`;hideQuiz()}));
+    document.querySelectorAll("[data-keys]").forEach((button)=>button.addEventListener("click",()=>{document.querySelectorAll(".preset").forEach((item)=>item.classList.remove("active"));button.classList.add("active");loadPreset(button.dataset.keys.split(",").map(Number),button.dataset.delete?Number(button.dataset.delete):null)}));
+    byId("custom-form").addEventListener("submit",(event)=>{event.preventDefault();const raw=byId("custom-input").value.trim(),tokens=raw.split(/[\s,，]+/).filter(Boolean);if(!tokens.length||tokens.some((token)=>! /^[-]?\d+$/.test(token))||tokens.length>SIZE){showError("請輸入 1 到 13 個整數，以空白或逗號分隔。");return}document.querySelectorAll(".preset").forEach((item)=>item.classList.remove("active"));loadPreset(tokens.map(Number));byId("custom-input").value=""});
+    byId("operation-form").addEventListener("submit",(event)=>{event.preventDefault();const key=Number(byId("operation-key").value);appendOperation("insert",key);byId("operation-key").value=""});
+    document.querySelectorAll("[data-operation]").forEach((button)=>button.addEventListener("click",()=>{const key=Number(byId("operation-key").value);appendOperation(button.dataset.operation,key);if(Number.isSafeInteger(key))byId("operation-key").value=""}));
+    byId("prev").addEventListener("click",()=>{stopPlay();hideQuiz();current=Math.max(0,current-1);render()});byId("next").addEventListener("click",()=>{stopPlay();stepForward()});byId("progress").addEventListener("input",()=>{stopPlay();hideQuiz();current=Number(byId("progress").value);render()});
+    byId("autoplay").addEventListener("click",()=>{if(timer){stopPlay();return}if(current===frames.length-1)current=0;hideQuiz();byId("autoplay").textContent="Ⅱ 暫停播放";timer=setInterval(()=>{if(current>=frames.length-1){stopPlay();return}current++;render()},700)});
+    byId("restart").addEventListener("click",()=>{stopPlay();hideQuiz();current=0;render()});
+    document.addEventListener("keydown",(event)=>{if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName))return;if(event.code==="ArrowRight")byId("next").click();if(event.code==="ArrowLeft")byId("prev").click();if(event.code==="Space"){event.preventDefault();byId("autoplay").click()}});
+    loadPreset([1,14,27,9,22]);
+  </script>
+</body>
+</html>
